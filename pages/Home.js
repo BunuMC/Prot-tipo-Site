@@ -1,53 +1,69 @@
-function Home() {
-    try {
-        return (
-            <div data-name="home-page">
-                <section className="hero-section flex items-center justify-center text-white" data-name="hero-section">
-                    <div className="text-center">
-                        <h1 className="text-5xl font-bold mb-4">Alimente seu futuro com energia solar</h1>
-                        <p className="text-xl mb-8">Soluções de energia sustentável para residências empresas</p>
-                        <a href="#products" className="btn-primary">
-                            Explorar Produtos
-                        </a>
-                    </div>
-                </section>
+import { useEffect, useState } from "react";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
-                <section className="py-16 bg-white" data-name="calculator-section">
-                    <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-12">Calcule sua economia</h2>
-                        <div className="max-w-3xl mx-auto">
-                            <SavingsCalculator />
-                        </div>
-                    </div>
-                </section>
+export default function Home() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-                <section className="py-16 bg-white" data-name="features-section">
-                    <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-12">Por que nos escolher?</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="feature-card" data-name="feature-card-efficiency">
-                                <i className="fas fa-bolt text-4xl text-blue-500 mb-4"></i>
-                                <h3 className="text-xl font-bold mb-2">Alta Eficiência</h3>
-                                <p className="text-gray-600">Nossos painéis convertem mais luz solar em eletricidade</p>
-                            </div>
-                            <div className="feature-card" data-name="feature-card-warranty">
-                                <i className="fas fa-shield-alt text-4xl text-blue-500 mb-4"></i>
-                                <h3 className="text-xl font-bold mb-2">Garantia de XX anos</h3>
-                                <p className="text-gray-600">Proteção de longo prazo para seu investimento</p>
-                            </div>
-                            <div className="feature-card" data-name="feature-card-installation">
-                                <i className="fas fa-tools text-4xl text-blue-500 mb-4"></i>
-                                <h3 className="text-xl font-bold mb-2">Instalação Profissional</h3>
-                                <p className="text-gray-600">Equipe de especialistas para uma configuração perfeita</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        );
-    } catch (error) {
-        console.error('Home page error:', error);
-        reportError(error);
-        return null;
-    }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "posts")); // Substitua "posts" pelo nome da sua coleção
+        const documents = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setData(documents);
+      } catch (err) {
+        setError("Erro ao carregar dados");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <div className="home-page">
+      <Header />
+      
+      <main className="container">
+        <h1>Bem-vindo ao Nosso Site</h1>
+        
+        {loading && <p>Carregando dados...</p>}
+        
+        {error && <p className="error">{error}</p>}
+        
+        {data.length > 0 && (
+          <section className="posts-grid">
+            {data.map((item) => (
+              <article key={item.id} className="post-card">
+                <h2>{item.title || "Sem título"}</h2>
+                <p>{item.content || "Sem conteúdo"}</p>
+                {item.imageUrl && (
+                  <img 
+                    src={item.imageUrl} 
+                    alt={item.title || "Imagem do post"} 
+                    className="post-image"
+                  />
+                )}
+              </article>
+            ))}
+          </section>
+        )}
+
+        {!loading && data.length === 0 && !error && (
+          <p>Nenhum post encontrado.</p>
+        )}
+      </main>
+
+      <Footer />
+    </div>
+  );
 }

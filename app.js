@@ -16,6 +16,8 @@ function App() {
                     return <About />;
                 case '#contact':
                     return <Contact />;
+                case '#admin': // Nova rota para a página de administração
+                    return <Admin />;
                 default:
                     return <Home />;
             }
