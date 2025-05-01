@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "serve -s .",
     "start": "serve -s .",
-    "build": "echo 'No build step required - static site'"
+    "build": "mkdir -p public && cp -r *.html *.js components lib pages styles public/ || true"
   },
   "dependencies": {
     "serve": "^14.2.1"
