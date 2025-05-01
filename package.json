@@ -1,16 +1,18 @@
 {
-  "dependencies": {
-    "firebase": "^11.6.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-  },
-  "devDependencies": {
-    "react-scripts": "^5.0.1"
-  },
+  "name": "solartech-solutions",
+  "version": "1.0.0",
+  "description": "Website para empresa de painéis solares",
+  "private": true,
   "scripts": {
-  "start": "react-scripts start",
-  "build": "react-scripts build",
-  "test": "react-scripts test",
-  "eject": "react-scripts eject"
-}
+    "dev": "serve -s .",
+    "start": "serve -s .",
+    "build": "echo 'No build step required - static site'"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=16",
+    "npm": ">=8"
+  }
 }

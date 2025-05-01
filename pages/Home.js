@@ -1,69 +1,98 @@
-import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-
-export default function Home() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "posts")); // Substitua "posts" pelo nome da sua coleção
-        const documents = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setData(documents);
-      } catch (err) {
-        setError("Erro ao carregar dados");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  return (
-    <div className="home-page">
-      <Header />
+function Home() {
+  try {
+      const [heroImage, setHeroImage] = React.useState('/api/placeholder/1200/600');
       
-      <main className="container">
-        <h1>Bem-vindo ao Nosso Site</h1>
-        
-        {loading && <p>Carregando dados...</p>}
-        
-        {error && <p className="error">{error}</p>}
-        
-        {data.length > 0 && (
-          <section className="posts-grid">
-            {data.map((item) => (
-              <article key={item.id} className="post-card">
-                <h2>{item.title || "Sem título"}</h2>
-                <p>{item.content || "Sem conteúdo"}</p>
-                {item.imageUrl && (
-                  <img 
-                    src={item.imageUrl} 
-                    alt={item.title || "Imagem do post"} 
-                    className="post-image"
-                  />
-                )}
-              </article>
-            ))}
-          </section>
-        )}
+      // Hero Section
+      const HeroSection = () => (
+          <div className="hero-section flex items-center justify-center text-center" data-name="hero-section">
+              <div className="container mx-auto px-4">
+                  <h1 className="text-5xl font-bold text-white mb-6">Energia Solar para um Futuro Sustentável</h1>
+                  <p className="text-xl text-white mb-8">
+                      Descubra como nossas soluções solares podem ajudar você a economizar dinheiro e preservar o meio ambiente.
+                  </p>
+                  <a href="#products" className="btn-primary text-lg px-8 py-3">
+                      Explore nossos produtos
+                  </a>
+              </div>
+          </div>
+      );
 
-        {!loading && data.length === 0 && !error && (
-          <p>Nenhum post encontrado.</p>
-        )}
-      </main>
+      // Features Section
+      const FeaturesSection = () => (
+          <div className="py-16 bg-white" data-name="features-section">
+              <div className="container mx-auto px-4">
+                  <h2 className="text-3xl font-bold text-center mb-12">Por que escolher energia solar?</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="feature-card">
+                          <div className="text-center mb-4">
+                              <i className="fas fa-leaf text-4xl text-green-500"></i>
+                          </div>
+                          <h3 className="text-xl font-bold text-center mb-4">Sustentável</h3>
+                          <p className="text-gray-600 text-center">
+                              Energia renovável que não esgota os recursos naturais e reduz as emissões de carbono.
+                          </p>
+                      </div>
+                      <div className="feature-card">
+                          <div className="text-center mb-4">
+                              <i className="fas fa-coins text-4xl text-yellow-500"></i>
+                          </div>
+                          <h3 className="text-xl font-bold text-center mb-4">Econômico</h3>
+                          <p className="text-gray-600 text-center">
+                              Reduza drasticamente suas contas de eletricidade e obtenha retorno sobre seu investimento.
+                          </p>
+                      </div>
+                      <div className="feature-card">
+                          <div className="text-center mb-4">
+                              <i className="fas fa-tools text-4xl text-blue-500"></i>
+                          </div>
+                          <h3 className="text-xl font-bold text-center mb-4">Confiável</h3>
+                          <p className="text-gray-600 text-center">
+                              Tecnologia comprovada com manutenção mínima e vida útil de décadas.
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      );
 
-      <Footer />
-    </div>
-  );
+      // Calculator Section
+      const CalculatorSection = () => (
+          <div className="py-16 bg-gray-100" data-name="calculator-section">
+              <div className="container mx-auto px-4">
+                  <div className="max-w-4xl mx-auto">
+                      <h2 className="text-3xl font-bold text-center mb-12">Veja quanto você pode economizar</h2>
+                      <SavingsCalculator />
+                  </div>
+              </div>
+          </div>
+      );
+
+      // CTA Section
+      const CTASection = () => (
+          <div className="py-16 bg-blue-600 text-white text-center" data-name="cta-section">
+              <div className="container mx-auto px-4">
+                  <h2 className="text-3xl font-bold mb-6">Pronto para mudar para energia solar?</h2>
+                  <p className="text-xl mb-8 max-w-2xl mx-auto">
+                      Dê o primeiro passo para um futuro sustentável e econômico. Entre em contato conosco hoje para uma consulta gratuita.
+                  </p>
+                  <a href="#contact" className="bg-white text-blue-600 font-bold px-8 py-3 rounded-lg hover:bg-gray-100 transition">
+                      Fale conosco agora
+                  </a>
+              </div>
+          </div>
+      );
+
+      return (
+          <div data-name="home-page">
+              <HeroSection />
+              <FeaturesSection />
+              <CalculatorSection />
+              <CTASection />
+          </div>
+      );
+  } catch (error) {
+      console.error('Home page error:', error);
+      reportError(error);
+      return null;
+  }
 }

@@ -8,6 +8,12 @@ function Admin() {
 
         // Função para buscar mensagens do Supabase
         const fetchMessages = async () => {
+            if (!window.supabaseClient) {
+                setError('Cliente Supabase não inicializado');
+                setIsLoading(false);
+                return;
+            }
+            
             try {
                 setIsLoading(true);
                 const { data, error } = await window.supabaseClient
@@ -28,6 +34,11 @@ function Admin() {
         // Função para fazer login
         const handleLogin = async (e) => {
             e.preventDefault();
+            if (!window.supabaseClient) {
+                setError('Cliente Supabase não inicializado');
+                return;
+            }
+            
             try {
                 setIsLoading(true);
                 const { data, error } = await window.supabaseClient.auth.signInWithPassword({
@@ -47,6 +58,11 @@ function Admin() {
 
         // Função para fazer logout
         const handleLogout = async () => {
+            if (!window.supabaseClient) {
+                setError('Cliente Supabase não inicializado');
+                return;
+            }
+            
             try {
                 const { error } = await window.supabaseClient.auth.signOut();
                 if (error) throw error;
@@ -61,11 +77,23 @@ function Admin() {
         // Verificar se o usuário já está autenticado quando o componente é montado
         React.useEffect(() => {
             const checkSession = async () => {
-                const { data } = await window.supabaseClient.auth.getSession();
-                if (data.session) {
-                    setIsAuthenticated(true);
-                    fetchMessages();
-                } else {
+                if (!window.supabaseClient) {
+                    setError('Cliente Supabase não inicializado');
+                    setIsLoading(false);
+                    return;
+                }
+                
+                try {
+                    const { data } = await window.supabaseClient.auth.getSession();
+                    if (data && data.session) {
+                        setIsAuthenticated(true);
+                        fetchMessages();
+                    } else {
+                        setIsLoading(false);
+                    }
+                } catch (err) {
+                    console.error('Erro ao verificar sessão:', err);
+                    setError('Erro ao verificar autenticação');
                     setIsLoading(false);
                 }
             };
