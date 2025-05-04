@@ -9,6 +9,11 @@ function App() {
         }, []);
 
         const renderPage = () => {
+            // Verifica se é uma página de detalhes de produto
+            if (currentPage.startsWith('#product/')) {
+                return <ProductDetail />;
+            }
+            
             switch (currentPage) {
                 case '#products':
                     return <Products />;
@@ -16,7 +21,7 @@ function App() {
                     return <About />;
                 case '#contact':
                     return <Contact />;
-                case '#admin': // Nova rota para a página de administração
+                case '#admin':
                     return <Admin />;
                 default:
                     return <Home />;
