@@ -27,7 +27,7 @@ function Products() {
         return (
             <div className="py-12" data-name="products-page">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold text-center mb-8">Nossos Produtos</h1>
+                    <h1 className="text-4xl font-bold text-center mb-8 text-black">Nossos Produtos</h1>
                     <div className="product-grid">
                         {products.map(product => (
                             <ProductCard key={product.id} product={product} />

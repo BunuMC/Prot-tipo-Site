@@ -3,7 +3,7 @@ function About() {
         return (
             <div className="py-12" data-name="about-page">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold text-center mb-8">Sobre Nós</h1>
+                    <h1 className="text-4xl font-bold text-center mb-8 text-black">Sobre Nós</h1>
                     <div className="max-w-3xl mx-auto">
                         <div className="bg-white rounded-lg shadow-lg p-8" data-name="about-content">
                             <p className="text-lg text-gray-700 mb-6">
